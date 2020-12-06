@@ -1,9 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Album {
+public class Album implements Serializable {
     private String albumName;
     private List<Photo> photos;
     private Photo currentPhoto = null;

@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidPhotos15">
+        <activity android:name=".searchActivity"></activity>
         <activity android:name=".homepageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

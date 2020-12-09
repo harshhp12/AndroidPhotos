@@ -57,4 +57,7 @@ public class AlbumList implements Serializable {
         this.curr = a;
     }
 
+    //return the current album
+    public Album getCurr(){return this.curr;}
+
 }

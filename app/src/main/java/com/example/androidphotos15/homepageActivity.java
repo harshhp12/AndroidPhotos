@@ -176,20 +176,13 @@ public class homepageActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 //set onclicked album as current album
-                //Album album = masterList.getAlbums().get(i);
-                //masterList.setCurr(album);
-
+                Album album = masterList.getAlbums().get(i);
+                masterList.setCurr(album);
                 currentIndex = i;
 
                 //upon click, we want to bring up menu options
                 registerForContextMenu(lv);
                 openContextMenu(lv);
-
-
-                //launch the SingleAlbumPage with photos for current album
-                //Intent a = new Intent(homepageActivity.this, albumView.class);
-                //startActivity(a);
-
             }
         });
 

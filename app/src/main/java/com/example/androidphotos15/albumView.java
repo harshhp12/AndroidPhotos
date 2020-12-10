@@ -128,6 +128,8 @@ public class albumView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //what happens upon clicking the move button
+                Intent a = new Intent(albumView.this, movePhoto.class);
+                startActivity(a);
             }
         });
 

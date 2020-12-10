@@ -47,6 +47,7 @@ public class homepageActivity extends AppCompatActivity {
     File albumsData = new File("data/data/com.example.androidphotos15/albums.dat");
 
     //create new instance of the AlbumList class
+    //create new instance of the AlbumList class
     public static AlbumList masterList = new AlbumList();
 
     //use a list of albums for this activity purposes

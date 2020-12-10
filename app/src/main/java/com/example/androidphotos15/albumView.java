@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import model.AlbumList;
 import model.Photo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -18,7 +21,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -51,6 +56,9 @@ public class albumView extends AppCompatActivity {
 
     //start off at the front of our photos list
     int i = 0;
+
+    //tag text
+    private String m_Text;
 
 
     public static final int PICK_IMAGE = 1;
@@ -230,9 +238,65 @@ public class albumView extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        return super.onContextItemSelected(item);
 
+         if (item.getItemId() == R.id.personAction){
+            //actions to rename
+            AlertDialog.Builder n = new AlertDialog.Builder(this);
+            n.setTitle("Person Tag");
+
+            // Set up the input
+            final EditText input = new EditText(this);
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+            n.setView(input);
+
+            // Set up the buttons
+            n.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    m_Text = input.getText().toString();
+                    homepageActivity.masterList.getCurr().getPhotos().get(i).addPersonTag(m_Text);
+                }
+            });
+            n.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            n.show();
+        }
+        else if (item.getItemId() == R.id.locationAction){
+            //actions to rename
+            AlertDialog.Builder n = new AlertDialog.Builder(this);
+            n.setTitle("Location Tag");
+
+            // Set up the input
+            final EditText input = new EditText(this);
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+            n.setView(input);
+
+            // Set up the buttons
+            n.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    m_Text = input.getText().toString();
+                    homepageActivity.masterList.getCurr().getPhotos().get(i).addLocationTag(m_Text);
+                }
+            });
+            n.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            n.show();
+        }
+
+
+
+        return true;
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.example.androidphotos15;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import model.AlbumList;
 import model.Photo;
@@ -10,7 +11,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,6 +52,7 @@ public class albumView extends AppCompatActivity {
     //start off at the front of our photos list
     int i = 0;
 
+
     public static final int PICK_IMAGE = 1;
 
     @Override
@@ -57,8 +63,6 @@ public class albumView extends AppCompatActivity {
         //initialize our imageview from our xml
         imageView = (ImageView) findViewById(R.id.imageView3);
 
-
-
         //if the list of photos in our current album is empty
         if (homepageActivity.masterList.getCurr().getPhotos().isEmpty()){
             //notify the user that there are no photos
@@ -66,20 +70,8 @@ public class albumView extends AppCompatActivity {
         }
         else {
             //show the first photo if it is not empty
-            //File imgFile = new File(homepageActivity.masterList.getCurr().getPhotos().get(i).getphotoPath());
             Uri imgUri = Uri.parse(homepageActivity.masterList.getCurr().getPhotos().get(i).getphotoPath());
-
-           // if(imgFile.exists())
-            //{
-                //imageView.setImageURI(Uri.fromFile(imgFile));
-                imageView.setImageURI(imgUri);
-                //}
-
-            //else{
-                System.out.println(homepageActivity.masterList.getCurr().getPhotos().get(i).getphotoPath());
-            //}
-
-            //imageView.setImageBitmap(BitmapFactory.decodeFile(homepageActivity.masterList.getCurr().getPhotos().get(i).getphotoPath()));
+            imageView.setImageURI(imgUri);
 
         }
 
@@ -91,9 +83,10 @@ public class albumView extends AppCompatActivity {
                 //what happens upon clicking the add button
 
                 //want file chooser capability
-                Intent intent = new Intent();
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
             }
         });
@@ -106,6 +99,7 @@ public class albumView extends AppCompatActivity {
                 //what happens upon clicking the remove button
                 if(homepageActivity.masterList.getCurr().getPhotos().size() == 0){
                     Toast.makeText(albumView.this, "No more photos to delete", Toast.LENGTH_SHORT).show();
+                    imageView.setImageResource(0);
                 }
 
                 else{
@@ -114,9 +108,7 @@ public class albumView extends AppCompatActivity {
                     Toast.makeText(albumView.this, "Photo Removed", Toast.LENGTH_SHORT).show();
 
 
-                    //ADD STUFF HERE
-
-
+                    imageView.setImageResource(0);
 
 
                     //serialize the data again
@@ -154,7 +146,8 @@ public class albumView extends AppCompatActivity {
                 }
 
                 else{
-                    //update the viewing
+
+                    //i//update the viewing
                     Uri imgUri = Uri.parse(homepageActivity.masterList.getCurr().getPhotos().get(i).getphotoPath());
                     imageView.setImageURI(imgUri);
               }
@@ -177,7 +170,7 @@ public class albumView extends AppCompatActivity {
                 else{
                     //update the viewing
                     Uri imgUri = Uri.parse(homepageActivity.masterList.getCurr().getPhotos().get(i).getphotoPath());
-                    imageView.setImageURI(imgUri);
+                   imageView.setImageURI(imgUri);
                 }
             }
         });
@@ -187,23 +180,31 @@ public class albumView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //what happens upon clicking add tags button
+                //upon click, we want to bring up menu options
+                registerForContextMenu(imageView);
+                openContextMenu(imageView);
+
             }
         });
 
     }
+
+    //This is after selecting a photo from the file chooser thing
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-                //add the photo onto our main list
-                homepageActivity.masterList.getCurr().addPhoto(data.getData().getPath());
-                System.out.println(data.getData().getPath());
 
-                //set up the selected image
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = data.getData();
-                    imageView.setImageURI(selectedImage);
-                }
+                Uri uri = null;
+                uri = data.getData();
+                String image_uristr = uri.toString();
+
+                //check duplicates
+
+              //add the photo onto our main list
+              homepageActivity.masterList.getCurr().addPhoto(image_uristr);
+              imageView.setImageURI(uri);
+               System.out.println(data.getData().getPath());
 
                 //now serialize the list
                 try{
@@ -213,6 +214,23 @@ public class albumView extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-       // }
+
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+        menu.setHeaderTitle("Select Tag Type");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return super.onContextItemSelected(item);
+
+    }
+
+
 }

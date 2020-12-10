@@ -198,7 +198,6 @@ public class homepageActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         menu.setHeaderTitle("Select Action");
-
     }
 
     @Override

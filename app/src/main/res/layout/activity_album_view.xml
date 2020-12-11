@@ -77,5 +77,14 @@
         android:layout_marginBottom="35dp"
         android:layout_marginEnd="76dp"
         android:text="Next" />
+
+    <Button
+        android:id="@+id/showTagsBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="43dp"
+        android:text="Show tags" />
 </RelativeLayout>
 

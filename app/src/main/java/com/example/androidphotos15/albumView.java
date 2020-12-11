@@ -24,11 +24,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public class albumView extends AppCompatActivity {
     //declare variables here:
@@ -38,6 +40,9 @@ public class albumView extends AppCompatActivity {
 
     //this will be our button to add a photo into the album
     private Button addButton;
+
+    //this will be our button to show tags
+    private Button showButton;
 
     //to remove a photo from the album
     private Button removeButton;
@@ -98,8 +103,33 @@ public class albumView extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
             }
         });
-
         //connect the xml to our local button
+        showButton = (Button) findViewById(R.id.showTagsBtn);
+        showButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //what happens upon clicking the show tags button
+
+
+                List personTags = homepageActivity.masterList.getCurr().getPhotos().get(i).getpersonTags();
+                List locationTags = homepageActivity.masterList.getCurr().getPhotos().get(i).getlocationTags();
+
+
+                for(int i =0; i<personTags.size(); i++)
+                {
+                    AlertDialog.Builder n = new AlertDialog.Builder(albumView.this);
+                    n.setTitle("Person:" + personTags.get(i));
+                    n.show();
+                }
+                for(int i =0; i<locationTags.size(); i++)
+                {
+                    AlertDialog.Builder n = new AlertDialog.Builder(albumView.this);
+                    n.setTitle("Location:" + locationTags.get(i));
+                    n.show();
+                }
+            }
+        });
+        //connect the xml to our local buttoni
         removeButton = (Button) findViewById(R.id.removeBtn);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,8 +166,12 @@ public class albumView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //what happens upon clicking the move button
-                Intent a = new Intent(albumView.this, movePhoto.class);
+
+               Intent a = new Intent(albumView.this, movePhoto.class);
                 startActivity(a);
+
+
+                //PopupMenu popup = new PopupMenu(albumView.this);
             }
         });
 
@@ -256,6 +290,14 @@ public class albumView extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     m_Text = input.getText().toString();
                     homepageActivity.masterList.getCurr().getPhotos().get(i).addPersonTag(m_Text);
+
+                    //serialize again
+                    try {
+                        AlbumList.serialize(homepageActivity.masterList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             });
             n.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -283,6 +325,12 @@ public class albumView extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     m_Text = input.getText().toString();
                     homepageActivity.masterList.getCurr().getPhotos().get(i).addLocationTag(m_Text);
+                    //serialize again
+                    try {
+                        AlbumList.serialize(homepageActivity.masterList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             n.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

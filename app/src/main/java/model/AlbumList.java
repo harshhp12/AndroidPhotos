@@ -60,4 +60,45 @@ public class AlbumList implements Serializable {
     //return the current album
     public Album getCurr(){return this.curr;}
 
+    public List<Photo> getPhotosWithTags(List<String> locationTags, List<String> personTags){
+        Set<Photo> resultSet = new HashSet<Photo>();
+        List<Photo> resultList = new ArrayList<Photo>();
+
+        for(Album album : this.albums){
+            for(Photo photo : album.getPhotos()){
+                boolean alreadyAdded = false;
+
+                for(String searchLocationTag : locationTags) {
+                    for(String photoLocationTag : photo.getlocationTags()) {
+                        if (photoLocationTag.toLowerCase().contains(searchLocationTag.toLowerCase())){
+                            resultSet.add(photo);
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                    if(alreadyAdded){
+                        break;
+                    }
+                }
+                if(!alreadyAdded) {
+                    for (String searchPersonTag : personTags) {
+                        for(String photoPersonTag : photo.getpersonTags()) {
+                            if (photoPersonTag.toLowerCase().contains(searchPersonTag.toLowerCase())) {
+                                resultSet.add(photo);
+                                break;
+                            }
+                        }
+                        if(alreadyAdded){
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        resultList.addAll(resultSet);
+        return resultList;
+    }
+
+
 }

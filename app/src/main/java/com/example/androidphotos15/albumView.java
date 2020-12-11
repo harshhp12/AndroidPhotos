@@ -59,6 +59,11 @@ public class albumView extends AppCompatActivity {
     //add tags to our photof
     private Button addTags;
 
+    //remove tags from our photo
+    private Button deleteTags;
+
+    private boolean delete;
+
     //start off at the front of our photos list
     int i = 0;
 
@@ -225,6 +230,19 @@ public class albumView extends AppCompatActivity {
             public void onClick(View view) {
                 //what happens upon clicking add tags button
                 //upon click, we want to bring up menu options
+                delete = false;
+
+                registerForContextMenu(imageView);
+                openContextMenu(imageView);
+
+            }
+        });
+
+        deleteTags = (Button) findViewById(R.id.deleteTag);
+        deleteTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                delete = true;
                 registerForContextMenu(imageView);
                 openContextMenu(imageView);
 
@@ -288,7 +306,9 @@ public class albumView extends AppCompatActivity {
             n.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    m_Text = input.getText().toString();
+
+                    if (!delete){
+                        m_Text = input.getText().toString();
                     homepageActivity.masterList.getCurr().getPhotos().get(i).addPersonTag(m_Text);
 
                     //serialize again
@@ -297,7 +317,18 @@ public class albumView extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+                    else{
+                        m_Text = input.getText().toString();
+                        homepageActivity.masterList.getCurr().getPhotos().get(i).removePersonTag(m_Text);
 
+                        //serialize again
+                        try {
+                            AlbumList.serialize(homepageActivity.masterList);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
             n.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -323,13 +354,25 @@ public class albumView extends AppCompatActivity {
             n.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    m_Text = input.getText().toString();
-                    homepageActivity.masterList.getCurr().getPhotos().get(i).addLocationTag(m_Text);
-                    //serialize again
-                    try {
-                        AlbumList.serialize(homepageActivity.masterList);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(!delete) {
+                        m_Text = input.getText().toString();
+                        homepageActivity.masterList.getCurr().getPhotos().get(i).addLocationTag(m_Text);
+                        //serialize again
+                        try {
+                            AlbumList.serialize(homepageActivity.masterList);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
+                        m_Text = input.getText().toString();
+                        homepageActivity.masterList.getCurr().getPhotos().get(i).removeLocationTag(m_Text);
+                        //serialize again
+                        try {
+                            AlbumList.serialize(homepageActivity.masterList);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
